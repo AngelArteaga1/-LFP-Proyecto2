@@ -3,6 +3,10 @@
 # Press Mayús+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import sys
+from Analizador import Analizador
+
+# VARIABLES GLOBALES
+analizador = None
 
 '''******************************MENU**********************************'''
 class Menu:
@@ -43,16 +47,26 @@ class Menu:
 
     def CargarArchivo(self):
         print("Porfavor intruduzca la ubicación del archivo:")
+        global analizador
+        analizador = Analizador(input())
+        analizador.LeerArchivo()
+        input()
     # END
 
     def GenerarGrafica(self):
-        print('Porfavor ingrese la ruta del archivo primero.')
+        if analizador ==  None:
+            print('Porfavor ingrese la ruta del archivo primero.')
+        else:
+            GraficarLista()
     # END
 
     def quit(self):
         print("Gracias por usar SimpleGraph...")
         sys.exit(0)
     # END
+
+def GraficarLista():
+    print('hola')
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
