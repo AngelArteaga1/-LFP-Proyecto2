@@ -47,6 +47,10 @@ class Analizador:
         return NodosLista
     def GetPerfecto(self):
         return Perfecto
+    def GetErrores(self):
+        return Errores
+    def GetTokens(self):
+        return Tokens
 
 # VARIABLES GLOBALES
 S = 0 # ESTADOS DE AUTOMATA
@@ -62,7 +66,7 @@ Colores =  ['azul', 'azul2', 'azul3',
             'gris', 'gris2', 'girs3',
             'morado', 'morado2', 'morado3',
             'verde', 'verde2', 'verde3',
-            'blanco'
+            'blanco', '#'
            ] # colores validos
 Boolean = ['verdadero', 'falso'] # posibles listas
 Nodos = ['nodo', 'nodos'] # posibles entradas de nodos
@@ -448,7 +452,7 @@ def AutomataGeneral(lineas, fila):
                 CantidadNodo = CantidadNodo + 1
                 S = 14
             elif i == ',':
-                token = Token(fila, columna, 'TokenLexico', 'NumTk')
+                token = Token(fila, columna, CantidadNodo, 'NumTk')
                 Tokens.append(token)
                 token = Token(fila, columna, i, 'ParATk')
                 Tokens.append(token)
@@ -509,9 +513,11 @@ def AutomataGeneral(lineas, fila):
         #ESTADO 19
         elif S == 19:
             if i.isalpha():
+                TokenLexico = i
                 Index = columna
                 S = 20
             elif i == '#':
+                TokenLexico = i
                 S = 20
             elif i == ' ':
                 S = 19
@@ -523,8 +529,9 @@ def AutomataGeneral(lineas, fila):
         #ESTADO 20
         elif S == 20:
             if i.isalnum():
+                TokenLexico = TokenLexico + i
                 S = 20
-            elif i == ';':
+            elif i == ';' and TokenLexico.lower() in Colores:
                 token = Token(fila, columna, TokenLexico, 'ColorTK')
                 Tokens.append(token)
                 token = Token(fila, columna, i, 'PuntoComaTk')
@@ -532,16 +539,18 @@ def AutomataGeneral(lineas, fila):
                 # crear el nodo
                 ColorNodo = TokenLexico
                 nodo = Nodo(NombreNodo, ColorNodo, CantidadNodo)
-                Nodos.append(nodo)
+                NodosLista.append(nodo)
                 # Resetear todo
                 ColorNodo = ''
                 NombreNodo = ''
                 CantidadNodo = ''
                 # Cambio de estado
+                TokenLexico = ''
                 S = 21
             elif i == ' ':
                 S = 20
             else:
+                print('pedro')
                 Perfecto = False
                 error = Error(fila, Index, 'No se esperaba: ' + TokenLexico)
                 Errores.append(error)
@@ -552,8 +561,6 @@ def AutomataGeneral(lineas, fila):
                 Index = columna
                 TokenLexico = TokenLexico + i
                 S = 11
-            elif i == ';':
-                S = 21
             elif i == '}':
                 token = Token(fila, columna, i, 'CorCTk')
                 Tokens.append(token)

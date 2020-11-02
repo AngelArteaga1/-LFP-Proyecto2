@@ -1,0 +1,14 @@
+digraph Grafica{
+node[shape="circle", fillcolor="white", style=filled, label="Disponible"]
+N1 [label="Luis", fillcolor="blue2"]
+N2 [label="Persona", fillcolor="green2"]
+N3 [label="Persona", fillcolor="green2"]
+N4
+N5 [label="Manuel", fillcolor="red2"]
+rankdir="LR";
+labelloc="t";
+label=">>>Personas<<<";
+fontsize=24;
+N1->N2->N3->N4->N5
+N5->N4->N3->N2->N1
+}
