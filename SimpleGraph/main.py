@@ -3,6 +3,7 @@
 # Press Mayús+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import sys
+import os
 from Analizador import Analizador
 
 # VARIABLES GLOBALES
@@ -58,6 +59,9 @@ class Menu:
             print('Porfavor ingrese la ruta del archivo primero.')
         else:
             GraficarReporte()
+            print('Reporte realizado sin problemas')
+            print('Porfavor ingrese cualquier entrada para continuar...')
+        input()
     # END
 
     def quit(self):
@@ -150,7 +154,7 @@ def GraficarReporte():
     if analizador.GetPerfecto() == True:
         GraficarLista()
         file.write('<h1>Grafica de la Lista</h1>\n')
-        file.write('<img src="borrar-fondo-imagen.webp" alt="">\n')
+        file.write('<img src="Grafica.svg" alt="">\n')
     else:
         # Crear tabla de errores
         errores = analizador.GetErrores()
@@ -197,9 +201,7 @@ def GraficarLista():
 
     # Obtener los nodos
     Nodos = analizador.GetNodosLista()
-    for i in Nodos:
-        print(i.GetColor())
-        print(i.GetNombre())
+
     #Empezar a graficar
     file = open('Grafica.dot', 'w', encoding="cp437", errors='ignore')
     file.write('digraph Grafica{\n')
@@ -216,16 +218,22 @@ def GraficarLista():
         else:
             tortilla = int(Cantidad)
         # creando los nodos
+        cont = 1
         for j in range(tortilla):
+            if cont == 1:
+                cad = ''
+            else:
+                cad = str(cont)
             if Nombre != '#' and color != '#':
-                file.write('N' + str(Contador) + ' [label="' + Nombre + '", fillcolor="' + color + '"]\n')
+                file.write('N' + str(Contador) + ' [label="' + Nombre + cad +'", fillcolor="' + color + '"]\n')
             elif Nombre == '#' and color != '#':
                 file.write('N' + str(Contador) + ' [fillcolor="' + color + '"]\n')
             elif color == '#' and Nombre != '#':
-                file.write('N' + str(Contador) + ' [label="' + Nombre + '"]\n')
+                file.write('N' + str(Contador) + ' [label="' + Nombre + cad + '"]\n')
             elif color == '#' and Nombre == '#':
                 file.write('N' + str(Contador) + '\n')
             Lista.append('N' + str(Contador))
+            cont = cont + 1
             Contador = Contador + 1
     file.write('rankdir="LR";\nlabelloc="t";\nlabel="' + NombreLista + '";\nfontsize=24;\n')
     # Realizando los enlaces
@@ -244,6 +252,7 @@ def GraficarLista():
                 file.write(i + '->')
     file.write('}')
     file.close()
+    os.system('dot -Tsvg Grafica.dot -o Grafica.svg')
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
